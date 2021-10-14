@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, StyleSheet } from "react-native";
-import { ListItem, Avatar } from "react-native-elements";
+import { Button, StyleSheet, } from "react-native";
+import { ListItem, Avatar, Image} from "react-native-elements";
 import { ScrollView } from "react-native-gesture-handler";
 
 import firebase from "../database/firebase";
@@ -9,15 +9,15 @@ const UserScreen = (props) => {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    firebase.db.collection("users").onSnapshot((querySnapshot) => {
+    firebase.db.collection("pacientes").onSnapshot((querySnapshot) => {
       const users = [];
       querySnapshot.docs.forEach((doc) => {
-        const { name, email, phone } = doc.data();
+        const { name, apellido, fecha } = doc.data();
         users.push({
           id: doc.id,
           name,
-          email,
-          phone,
+          apellido,
+          fecha,
         });
       });
       setUsers(users);
@@ -26,10 +26,7 @@ const UserScreen = (props) => {
 
   return (
     <ScrollView>
-      <Button
-        onPress={() => props.navigation.navigate("CreateUserScreen")}
-        title="Create User"
-      />
+      <Button onPress={() => props.navigation.navigate("CreateUserScreen")} title="Registrar Paciente"/>
       {users.map((user) => {
         return (
           <ListItem
@@ -42,16 +39,14 @@ const UserScreen = (props) => {
             }}
           >
             <ListItem.Chevron />
-            <Avatar
-              source={{
-                uri:
-                  "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-              }}
+            <Image
+              source={{ uri: "../assets/icono-paciente.jpg" }}
+              style={{ width: 20, height: 20 }}
               rounded
             />
             <ListItem.Content>
-              <ListItem.Title>{user.name}</ListItem.Title>
-              <ListItem.Subtitle>{user.email}</ListItem.Subtitle>
+              <ListItem.Title>{user.name} {user.apellido}</ListItem.Title>
+              <ListItem.Subtitle>{user.fecha}</ListItem.Subtitle>
             </ListItem.Content>
           </ListItem>
         );

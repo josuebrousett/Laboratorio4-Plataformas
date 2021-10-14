@@ -15,8 +15,10 @@ const UserDetailScreen = (props) => {
   const initialState = {
     id: "",
     name: "",
-    email: "",
-    phone: "",
+    apellido:"",
+    fecha:"",
+    estatura: "",
+    direccion: "",
   };
 
   const [user, setUser] = useState(initialState);
@@ -27,7 +29,7 @@ const UserDetailScreen = (props) => {
   };
 
   const getUserById = async (id) => {
-    const dbRef = firebase.db.collection("users").doc(id);
+    const dbRef = firebase.db.collection("pacientes").doc(id);
     const doc = await dbRef.get();
     const user = doc.data();
     setUser({ ...user, id: doc.id });
@@ -37,7 +39,7 @@ const UserDetailScreen = (props) => {
   const deleteUser = async () => {
     setLoading(true)
     const dbRef = firebase.db
-      .collection("users")
+      .collection("pacientes")
       .doc(props.route.params.userId);
     await dbRef.delete();
     setLoading(false)
@@ -45,9 +47,10 @@ const UserDetailScreen = (props) => {
   };
 
   const openConfirmationAlert = () => {
+    debugger;
     Alert.alert(
-      "Removing the User",
-      "Are you sure?",
+      "Eliminando Paciente",
+      "Esta Seguro?",
       [
         { text: "Yes", onPress: () => deleteUser() },
         { text: "No", onPress: () => console.log("canceled") },
@@ -59,11 +62,13 @@ const UserDetailScreen = (props) => {
   };
 
   const updateUser = async () => {
-    const userRef = firebase.db.collection("users").doc(user.id);
+    const userRef = firebase.db.collection("pacientes").doc(user.id);
     await userRef.set({
       name: user.name,
-      email: user.email,
-      phone: user.phone,
+      apellido: user.apellido,
+      fecha: user.fecha,
+      estatura:user.estatura,
+      direccion:user.direccion
     });
     setUser(initialState);
     props.navigation.navigate("UsersList");
@@ -85,7 +90,7 @@ const UserDetailScreen = (props) => {
     <ScrollView style={styles.container}>
       <View>
         <TextInput
-          placeholder="Name"
+          placeholder="Nombre"
           autoCompleteType="username"
           style={styles.inputGroup}
           value={user.name}
@@ -94,31 +99,40 @@ const UserDetailScreen = (props) => {
       </View>
       <View>
         <TextInput
-          autoCompleteType="email"
-          placeholder="Email"
+          placeholder="Apellido"
+          autoCompleteType="username"
           style={styles.inputGroup}
-          value={user.email}
-          onChangeText={(value) => handleTextChange(value, "email")}
+          value={user.apellido}
+          onChangeText={(value) => handleTextChange(value, "apellido")}
         />
       </View>
       <View>
         <TextInput
-          placeholder="Phone"
-          autoCompleteType="tel"
+          autoCompleteType="Estatura"
+          placeholder="Estatura"
           style={styles.inputGroup}
-          value={user.phone}
-          onChangeText={(value) => handleTextChange(value, "phone")}
+          value={user.estatura}
+          onChangeText={(value) => handleTextChange(value, "estatura")}
+        />
+      </View>
+      <View>
+        <TextInput
+          placeholder="Direccion"
+          autoCompleteType="direccion"
+          style={styles.inputGroup}
+          value={user.direccion}
+          onChangeText={(value) => handleTextChange(value, "direccion")}
         />
       </View>
       <View style={styles.btn}>
         <Button
-          title="Delete"
+          title="Eliminar"
           onPress={() => openConfirmationAlert()}
           color="#E37399"
         />
       </View>
       <View>
-        <Button title="Update" onPress={() => updateUser()} color="#19AC52" />
+        <Button title="Guardar" onPress={() => updateUser()} color="#19AC52" />
       </View>
     </ScrollView>
   );
