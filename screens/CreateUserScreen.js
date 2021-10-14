@@ -6,8 +6,10 @@ import firebase from "../database/firebase";
 const AddUserScreen = (props) => {
   const initalState = {
     name: "",
-    email: "",
-    phone: "",
+    apellido:"",
+    fecha:"",
+    estatura: "",
+    direccion: "",
   };
 
   const [state, setState] = useState(initalState);
@@ -18,14 +20,16 @@ const AddUserScreen = (props) => {
 
   const saveNewUser = async () => {
     if (state.name === "") {
-      alert("please provide a name");
+      alert("Por favor, ingrese su nombre");
     } else {
 
       try {
-        await firebase.db.collection("users").add({
+        await firebase.db.collection("pacientes").add({
           name: state.name,
-          email: state.email,
-          phone: state.phone,
+          apellido:state.apellido,
+          fecha:state.fecha,
+          estatura:state.estatura,
+          direccion:state.direccion
         });
 
         props.navigation.navigate("UsersList");
@@ -33,24 +37,29 @@ const AddUserScreen = (props) => {
         console.log(error)
       }
     }
+    console.log("guardar",state)
   };
 
   return (
     <ScrollView style={styles.container}>
       {/* Name Input */}
       <View style={styles.inputGroup}>
-        <TextInput placeholder="Name" onChangeText={(value) => handleChangeText(value, "name")} value={state.name}/>
+        <TextInput placeholder="Nombres" onChangeText={(value) => handleChangeText(value, "name")} value={state.name}/>
+      </View>
+
+      <View style={styles.inputGroup}>
+        <TextInput placeholder="Apellidos" onChangeText={(value) => handleChangeText(value, "apellido")} value={state.apellido}/>
       </View>
 
       {/* Email Input */}
       <View style={styles.inputGroup}>
-        <TextInput placeholder="Email" multiline={true} numberOfLines={4} onChangeText={(value) => handleChangeText(value, "email")}
-          value={state.email}/>
+        <TextInput placeholder="Estatura" multiline={true} numberOfLines={4} onChangeText={(value) => handleChangeText(value, "estatura")}
+          value={state.estatura}/>
       </View>
 
       {/* Input */}
       <View style={styles.inputGroup}>
-        <TextInput placeholder="phone" onChangeText={(value) => handleChangeText(value, "phone")} value={state.phone}/>
+        <TextInput placeholder="Direccion" onChangeText={(value) => handleChangeText(value, "direccion")} value={state.direccion}/>
       </View>
 
       <View style={styles.button}>
